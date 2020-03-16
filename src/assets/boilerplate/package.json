@@ -10,9 +10,9 @@
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./.env,./.env.sample --copy-files",
     "lint": "eslint --fix src",
     "test": "mocha --exit",
-    "seed": "sequelize db:seed:all",
-    "migrate": "sequelize db:migrate",
-    "migrate-refresh": "sequelize db:migrate:undo:all && npm run migrate"
+    "seed": "nartisan db:seed:all",
+    "migrate": "nartisan db:migrate",
+    "migrate-refresh": "nartisan db:migrate:undo:all && npm run migrate"
   },
   "license": "MIT",
   "dependencies": {
@@ -40,7 +40,7 @@
     "mocha": "^7.1.0",
     "nodemon": "^2.0.2",
     "rimraf": "^3.0.2",
-    "sequelize-cli": "^5.5.1",
+    "nartisan": "^1.0.2",
     "supertest": "^4.0.2"
   }
 }
