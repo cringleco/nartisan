@@ -33,16 +33,12 @@ Nartisan can be installed globally via
 $ npm install -g nartisan
 ```
 
-Or you can use any of the commands via npx
-
-```bash
-$ npx nartisan $command
-```
+Please don't use npx because it will not work with npx, need to look into this problem.
 
 And then you should be able to run the CLI with
 
 ```bash
-$ npx nartisan or nartisan
+$ nartisan
 ```
 
 ### Usage
@@ -50,7 +46,7 @@ $ npx nartisan or nartisan
 ```
 Nartisan CLI [Node: 10.15.0, CLI: 1.0.0, ORM: 5.11.0]
 
-npx nartisan || nartisan [command]
+nartisan [command]
 
 Commands:
 
