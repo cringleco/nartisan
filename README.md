@@ -50,7 +50,7 @@ nartisan [command]
 
 Commands:
 
-  nartisan init name                         Initializes project from boilerplate   [aliases: create, new]
+  nartisan init name                         Inits project from boilerplate in current folder[aliases: create, new]
   nartisan init:dotenv                       Initializes a new .env file        [aliases: init:env]
   nartisan init:config                       Initializes configuration
   nartisan init:migrations                   Initializes migrations

@@ -138,7 +138,9 @@ module.exports = {
 
     attr[0] = attr[0] + "]";
 
-    attr[attr.length - 1] = attr[attr.length - 1] + "]";
+    if (attr.length > 1) {
+      attr[attr.length - 1] = attr[attr.length - 1] + "]";
+    }
 
     let data = [];
     let dataValues = [];
