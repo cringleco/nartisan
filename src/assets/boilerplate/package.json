@@ -40,7 +40,7 @@
     "mocha": "^7.1.0",
     "nodemon": "^2.0.2",
     "rimraf": "^3.0.2",
-    "nartisan": "^1.0.2",
+    "nartisan": "^1.0.4",
     "supertest": "^4.0.2"
   }
 }
