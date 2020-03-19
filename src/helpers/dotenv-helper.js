@@ -8,7 +8,7 @@ const questions = [
     name: "DB_NAME",
     type: "input",
     message: "Enter your Database name",
-    default: ""
+    default: "nartisan"
   },
   {
     name: "DB_HOST",
@@ -53,11 +53,6 @@ function generateFileContent(env) {
 }
 
 function askQuestions() {
-  helpers.view.log(
-    "Creating .env file please answer the questions or press enter for default"
-  );
-  console.log(" ");
-
   inquirer
     .prompt(questions)
     .then(answers => {

@@ -1,13 +1,13 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 // eslint-disable-next-line
 import db from "../models";
-import User from '../models/User';
+import User from "../models/user";
 import {
   userInfos,
   signRefreshToken,
   signToken,
   sendCookies
-} from '../utils/jwt';
+} from "../utils/jwt";
 
 export const createUser = async (req, res, next) => {
   try {
@@ -27,7 +27,7 @@ export const createUser = async (req, res, next) => {
 
     if (checkIfUserExists) {
       res.status(400);
-      const err = new Error('User with given email already exists');
+      const err = new Error("User with given email already exists");
       next(err);
     } else {
       const hash = await bcrypt.hash(req.body.password, 10);
@@ -90,7 +90,7 @@ export const loginUser = async (req, res, next) => {
       }
     } else {
       res.status(400);
-      const err = new Error('No user found with the given email address');
+      const err = new Error("No user found with the given email address");
       return next(err);
     }
     // eslint-disable-next-line

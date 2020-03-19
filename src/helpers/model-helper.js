@@ -153,20 +153,39 @@ module.exports = {
       }
 
       const splittedElement = element.split("[");
+
       var dataName = splittedElement[0].slice(0, -1);
-      var dataTypes = splittedElement[1].slice(0, -1);
+
+      let dataTypes;
+      if (i === 0 || i === attr.length - 1) {
+        dataTypes = splittedElement[1].slice(0, -1);
+      } else {
+        dataTypes = splittedElement[1];
+      }
+
       let datType = dataTypes.split(",");
+
       datType.map((el, i) => {
         const dat = el.split(":");
         const ty = dat[0];
 
-        if (ty == "type") {
-          const val = dat[1].toUpperCase();
+        if (dat.length === 1) {
           datType[i] =
-            ty + ":" + `${isMigration ? "Sequelize" : "DataTypes"}.` + val;
-        }
+            "type" +
+            ":" +
+            `${isMigration ? "Sequelize" : "DataTypes"}.` +
+            dat[0].toUpperCase();
+          dat.unshift("type");
+          dataValues.push(dat);
+        } else {
+          if (ty == "type") {
+            const val = dat[1].toUpperCase();
 
-        dataValues.push(dat);
+            datType[i] =
+              ty + ":" + `${isMigration ? "Sequelize" : "DataTypes"}.` + val;
+          }
+          dataValues.push(dat);
+        }
       });
       data.push({ dataName: dataName, dataValues: datType });
     }
