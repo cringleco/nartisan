@@ -1,6 +1,6 @@
 {
   "name": "nartisan",
-  "version": "1.0.4",
+  "version": "1.0.8",
   "description": "Nartisan Wrapper for Sequelize & Node Express API CLI",
   "bin": {
     "nartisan": "./lib/nartisan",

@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import db from "../models";
-import <%=modelName%>  from  '../models/<%= modelName.toLowerCase()%>';
+const <%=modelName%> = db.<%=modelName%>
 
 // Displays a listing of the model
 

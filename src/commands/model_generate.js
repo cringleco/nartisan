@@ -9,21 +9,31 @@ exports.builder = yargs =>
       .option("name", {
         describe: "Defines the name of the new model",
         type: "string",
-        demandOption: true
+        demandOption: true,
+        alias: "n"
       })
       .option("attributes", {
         describe: "A list of attributes",
         type: "string",
-        demandOption: false
+        demandOption: false,
+        alias: "a"
       })
       .option("associations", {
         describe: "A list of associations",
         type: "string",
-        demandOption: false
+        demandOption: false,
+        alias: "r"
+      })
+      .option("cache", {
+        describe: "Add Cache for current model",
+        type: "boolean",
+        demandOption: false,
+        alias: "c"
       })
       .option("force", {
         describe: "Forcefully re-creates model with the same name",
         type: "string",
+        alias: "f",
         demandOption: false
       })
   ).argv;
@@ -38,22 +48,10 @@ exports.handler = function(args) {
 
   try {
     helpers.model.generateFile(args);
+    helpers.model.editModelIndex(args);
   } catch (err) {
     helpers.view.error(err.message);
   }
-
-  helpers.view.log(
-    "New model was created at",
-    clc.blueBright(helpers.path.getModelPath(args.name)),
-    "."
-  );
-  helpers.view.log(
-    "New migration was created at",
-    clc.blueBright(helpers.path.getMigrationPath(args.name)),
-    "."
-  );
-
-  process.exit(0);
 };
 
 function ensureModelsFolder() {

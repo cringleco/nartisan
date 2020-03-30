@@ -1,9 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import Sequelize from 'sequelize';
-import SimpleCache from 'sequelize-simple-cache';
+import fs from "fs";
+import path from "path";
+import Sequelize from "sequelize";
+import SimpleCache from "sequelize-simple-cache";
 
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || "development";
 // eslint-disable-next-line
 const config = require(`${__dirname}/../config/index.js`)[env];
 
@@ -30,8 +30,8 @@ const models = Object.assign(
   {},
   ...fs
     .readdirSync(__dirname)
-    .filter((file) => file.indexOf('.') !== 0 && file !== 'index.js')
-    .map((file) => {
+    .filter(file => file.indexOf(".") !== 0 && file !== "index.js")
+    .map(file => {
       // eslint-disable-next-line
       const model = require(path.join(__dirname, file)).default;
 
@@ -48,12 +48,18 @@ for (const model of Object.keys(models)) {
     models[model].associate(models);
 }
 
-models.User = cache.init(models.User);
+//Don't remove the line below its for importing models and AutoCompletion
+//IMPORTS
+import User from "./user";
 
 const db = {
-  ...models,
+  User: User,
   sequelize,
   Sequelize
 };
 
-module.exports = db;
+//Don't remove the line below its for creating new caching instance
+//CACHING
+db.User = cache.init(db.User);
+
+export default db;

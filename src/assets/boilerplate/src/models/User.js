@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize';
+import Sequelize from "sequelize";
 
 export default class User extends Sequelize.Model {
   static init(sequelize, DataTypes) {
@@ -17,15 +17,12 @@ export default class User extends Sequelize.Model {
         }
       },
       {
-        tableName: 'users',
-        modelName: 'User',
+        tableName: "users",
+        modelName: "User",
         sequelize
       }
     );
   }
 
-  static associate(models) {
-    this.hasMany(models.Post, { foreignKey: 'userId' });
-    this.hasMany(models.Like, { foreignKey: 'userId' });
-  }
+  static associate(models) {}
 }

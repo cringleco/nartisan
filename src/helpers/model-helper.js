@@ -2,6 +2,8 @@ import helpers from "./index";
 
 const Sequelize = helpers.generic.getSequelize();
 const validAttributeFunctionType = ["array", "enum"];
+import fs from "fs";
+import clc from "cli-color";
 
 /**
  * Check the given dataType actual exists.
@@ -127,6 +129,57 @@ module.exports = {
         },
         [[], []]
       );
+  },
+
+  editModelIndex(args) {
+    const modelsIndex = helpers.path.getModelIndex();
+    console.log(modelsIndex);
+    let newModelsFile;
+
+    fs.readFile(modelsIndex, "utf-8", function(err, data) {
+      if (err) {
+        helpers.view.error("Error editing Route Index file" + err);
+        process.exit(0);
+      } else {
+        newModelsFile = data;
+        const modelName = args.name;
+
+        newModelsFile = newModelsFile.replace(
+          `//IMPORTS`,
+          `//IMPORTS\nimport ${modelName} from "./${modelName.toLowerCase()}"`
+        );
+
+        newModelsFile = newModelsFile.replace(
+          `const db = {`,
+          `const db = {\n  ${modelName}:${modelName},`
+        );
+
+        fs.writeFile(modelsIndex, newModelsFile, function(err) {
+          if (err) {
+            helpers.view.error("Error editing Route Index file" + err);
+            process.exit(0);
+          } else {
+            helpers.view.log(
+              "Updated Models Index File ",
+              clc.blueBright(modelsIndex),
+              ""
+            );
+            helpers.view.log(
+              "New model was created at",
+              clc.blueBright(helpers.path.getModelPath(args.name)),
+              "."
+            );
+            helpers.view.log(
+              "New migration was created at",
+              clc.blueBright(helpers.path.getMigrationPath(args.name)),
+              "."
+            );
+
+            process.exit(0);
+          }
+        });
+      }
+    });
   },
 
   transformExtAttributes(args, isMigration) {

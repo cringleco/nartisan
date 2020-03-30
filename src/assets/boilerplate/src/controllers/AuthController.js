@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 // eslint-disable-next-line
 import db from "../models";
-import User from "../models/user";
+const User = db.User;
 import {
   userInfos,
   signRefreshToken,

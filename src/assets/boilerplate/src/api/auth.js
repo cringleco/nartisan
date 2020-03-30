@@ -1,5 +1,4 @@
 import express from "express";
-import cors from "../middlewares/cors";
 import { validateRegister } from "../validators/authValidators";
 import {
   createUser,
@@ -8,7 +7,6 @@ import {
 } from "../controllers/AuthController";
 
 const router = express.Router();
-cors(router);
 
 router.get("/", (req, res) => {
   res.json({ hello: "Hi from auth" });

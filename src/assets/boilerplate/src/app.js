@@ -1,28 +1,30 @@
-import express from 'express';
-import morgan from 'morgan';
-import helmet from 'helmet';
-import cookieParser from 'cookie-parser';
-import { notFound, errorHandler } from './errorMiddlewares';
+import express from "express";
+import morgan from "morgan";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
+import { notFound, errorHandler } from "./errorMiddlewares";
+import cors from "./middlewares/cors";
 
-import api from './api';
+import api from "./api";
 
-require('dotenv').config();
+require("dotenv").config();
 
 const app = express();
 
-app.use(morgan('dev'));
+cors(app);
+app.use(morgan("dev"));
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.json({
-    message: '🌈✨'
+    message: "🌈✨"
   });
 });
 
-app.use('/api', api);
+app.use("/api", api);
 
 app.use(notFound);
 app.use(errorHandler);

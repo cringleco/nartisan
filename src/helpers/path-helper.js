@@ -120,6 +120,10 @@ module.exports = {
     return args.modelsPath || path.resolve(process.cwd(), "models");
   },
 
+  getModelIndex() {
+    return path.resolve(this.getModelsPath(), this.addFileExtension("index"));
+  },
+
   getModelPath(modelName) {
     return path.resolve(
       this.getModelsPath(),
