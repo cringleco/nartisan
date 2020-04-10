@@ -1,28 +1,35 @@
 const jwt = require("jsonwebtoken");
 
 const options = { expiresIn: "15min" };
+const optionsMobile = { expiresIn: "999d" };
 const refreshOptions = { expiresIn: "14d" };
 const { SECRET_KEY, REFRESH_KEY } = require("../config").keys;
 
-const userInfos = user => ({
+const userInfos = (user) => ({
   id: user.id,
   username: user.username,
-  email: user.email
+  email: user.email,
 });
 
-const signToken = user => {
+const signToken = (user) => {
   const userInfo = userInfos(user);
   const token = jwt.sign(userInfo, SECRET_KEY, options);
   return token;
 };
 
-const signRefreshToken = user => {
+const signTokenMobile = (user) => {
+  const userInfo = userInfos(user);
+  const token = jwt.sign(userInfo, SECRET_KEY, optionsMobile);
+  return token;
+};
+
+const signRefreshToken = (user) => {
   const userInfo = userInfos(user);
   const token = jwt.sign(userInfo, REFRESH_KEY, refreshOptions);
   return token;
 };
 
-const verifyToken = token =>
+const verifyToken = (token) =>
   new Promise((resolve, reject) => {
     try {
       const verify = jwt.verify(token, SECRET_KEY);
@@ -32,7 +39,7 @@ const verifyToken = token =>
     }
   });
 
-const verifyRefreshToken = token =>
+const verifyRefreshToken = (token) =>
   new Promise((resolve, reject) => {
     try {
       const verify = jwt.verify(token, REFRESH_KEY);
@@ -43,7 +50,7 @@ const verifyRefreshToken = token =>
   });
 
 const sendCookies = (res, logout, refresh, accesstoken, refreshtoken) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     const refreshstamp = new Date(Date.now() + 60 * 60 * 24 * 14 * 1000);
     const deletestamp = new Date(Date.now() - 900000);
     const tokenstamp = new Date(Date.now() + 900000);
@@ -54,7 +61,7 @@ const sendCookies = (res, logout, refresh, accesstoken, refreshtoken) =>
     const tokenexpires = logout ? deletestamp : tokenstamp;
     const domain =
       process.env.NODE_ENV == "production"
-        ? process.env.DOMAIN_FOR_COOKIES == "production"
+        ? process.env.DOMAIN_FOR_COOKIES
         : "localhost";
     const secure = process.env.NODE_ENV == "production" ? true : false;
 
@@ -62,7 +69,7 @@ const sendCookies = (res, logout, refresh, accesstoken, refreshtoken) =>
       expires: tokenexpires,
       secure,
       domain,
-      httpOnly: true
+      httpOnly: true,
     });
 
     if (!refresh) {
@@ -70,7 +77,7 @@ const sendCookies = (res, logout, refresh, accesstoken, refreshtoken) =>
         expires: refreshexpires,
         secure,
         domain,
-        httpOnly: true
+        httpOnly: true,
       });
     }
 
@@ -83,5 +90,6 @@ module.exports = {
   verifyToken,
   userInfos,
   verifyRefreshToken,
-  sendCookies
+  sendCookies,
+  signTokenMobile,
 };

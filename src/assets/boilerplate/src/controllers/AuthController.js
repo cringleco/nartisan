@@ -6,7 +6,8 @@ import {
   userInfos,
   signRefreshToken,
   signToken,
-  sendCookies
+  sendCookies,
+  signTokenMobile,
 } from "../utils/jwt";
 
 export const createUser = async (req, res, next) => {
@@ -18,11 +19,11 @@ export const createUser = async (req, res, next) => {
       username: body.username,
       email: body.email,
       password: body.password,
-      created: today
+      created: today,
     };
 
     const checkIfUserExists = await User.findOne({
-      where: { email: userData.email }
+      where: { email: userData.email },
     });
 
     if (checkIfUserExists) {
@@ -51,7 +52,7 @@ export const createUser = async (req, res, next) => {
         user: userInfo,
         isLogged: true,
         token,
-        refreshToken
+        refreshToken,
       });
     }
   } catch (error) {
@@ -64,8 +65,8 @@ export const loginUser = async (req, res, next) => {
     const { body } = req;
     const user = await User.findOne({
       where: {
-        email: body.email
-      }
+        email: body.email,
+      },
     });
 
     if (user) {
@@ -85,7 +86,7 @@ export const loginUser = async (req, res, next) => {
           user: userInfo,
           isLogged: true,
           token,
-          refreshToken
+          refreshToken,
         });
       }
     } else {
@@ -100,26 +101,86 @@ export const loginUser = async (req, res, next) => {
   }
 };
 
+export const loginMobile = async (req, res, next) => {
+  try {
+    const { body } = req;
+    const user = await User.findOne({
+      where: {
+        email: body.email,
+      },
+    });
+    if (user) {
+      if (bcrypt.compareSync(body.password, user.password)) {
+        const userInfo = userInfos(user);
+        const token = await signTokenMobile(user);
+
+        return res.json({
+          user: userInfo,
+          isLogged: true,
+          token,
+        });
+      }
+    } else {
+      res.status(400);
+      const err = new Error("No user found with the given email address");
+      return next(err);
+    }
+    // eslint-disable-next-line
+    return;
+  } catch (error) {
+    console.log(error);
+    return next(error);
+  }
+};
+
 export const refreshToken = async (req, res, next) => {
   try {
     const { email } = req.user;
 
-    const uuidr = req.cookies.uuidr || req.query.uuidr;
-
     const user = await User.findOne({ where: { email } });
 
-    if (uuidr === user.refreshToken) {
+    if (req.token == user.refreshToken) {
       const token = signToken(user);
+      const tokenstamp = new Date(Date.now() + 900000);
+      const domain =
+        process.env.NODE_ENV == "production"
+          ? process.env.DOMAIN_FOR_COOKIES
+          : "localhost";
+      const secure = process.env.NODE_ENV == "production" ? true : false;
 
-      const ress = await sendCookies(res, false, true, token, null);
+      res.cookie("uuidt", token, {
+        expires: tokenstamp,
+        secure,
+        domain,
+        httpOnly: true,
+      });
 
       const userInfo = userInfos(user);
 
-      return ress.json({ token, user: userInfo });
+      return res.json({ token, user: userInfo });
+    } else {
+      return res.status(401).send({
+        msg: "Your Refresh Token doesn't match our records!",
+      });
     }
-    return res.status(401).send({
-      msg: "Your Refresh Token doesn't match our records!"
-    });
+  } catch (error) {
+    console.log(error);
+
+    return next(error);
+  }
+};
+
+export const logout = async (req, res, next) => {
+  try {
+    const { email } = req.user;
+
+    const user = await User.findOne({ where: { email } });
+
+    await user.update({ refreshToken: null });
+
+    const ress = await sendCookies(res, true, false, null, null);
+
+    return ress.json({ success: true });
   } catch (error) {
     return next(error);
   }

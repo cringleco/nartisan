@@ -13,6 +13,7 @@ export default class <%= name %> extends Sequelize.Model {
         <%= underscored ? 'underscored: true,' : '' %>
         modelName: '<%= name %>',
         tableName: '<%= tableName.toLowerCase() %>',
+        paranoid: true,
         sequelize
       }
     );

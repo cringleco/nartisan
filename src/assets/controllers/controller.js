@@ -41,7 +41,7 @@ export const get<%=modelName%> = async (req, res, next) => {
 
      const {id} = req.params;   
 
-     const <%=modelName.toLowerCase()%> = await <%=modelName%>.findOne({where:{id: id}});
+     const <%=modelName.toLowerCase()%> = await <%=modelName%>.findByPk(id);
 
      res.json({<%=modelName.toLowerCase()%>})
 
@@ -54,9 +54,11 @@ export const get<%=modelName%> = async (req, res, next) => {
 
   export const update<%=modelName%> = async (req, res, next) => {
     try {
-     const {id} = req.params;   
+     const {id} = req.params;  
+     
+     const <%=modelName.toLowerCase()%> = await <%=modelName%>.findByPk(id);
 
-     const <%=modelName.toLowerCase()%> = await <%=modelName%>.update({},{where:{id: id}});
+     await <%=modelName.toLowerCase()%>.update({},{returning:true,plain:true})
 
      res.json({<%=modelName.toLowerCase()%>})
 
